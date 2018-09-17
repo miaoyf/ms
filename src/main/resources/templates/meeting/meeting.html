@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+	table{
+		width: 100%;
+	}
+	td{
+		border: 1px solid #0c0c0c;
+		text-align: center;
+		height: 26px;
+		width: 100px;
+	 }
+	 .tr_hide{
+	 	display: none;
+	 }
+</style>
+</head>
+<body>
+	<div>
+		<input type="hidden" id="meetingId" th:value="${meetingId}">
+		<table>
+			<tr>
+				<td>
+					会议议题单
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<table>
+						<tr>
+							<td>会议类型：</td>
+							<td th:text="${meeting.meeting_type}"></td>
+							<td>会议标题：</td>
+							<td colspan="3" th:text="${meeting.meeting_title}"></td>
+						</tr>
+						<tr>
+							<td>会议期次：</td>
+							<td th:text="${meeting.meeting_num}"></td>
+							<td>会议时间：</td>
+							<td th:text="${meeting.meeting_time}"></td>
+							<td>会议地点：</td>
+							<td th:text="${meeting.meeting_room}"></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<table id="sort">
+					    <thead>
+					        <tr>
+					        	<th class="th_style">序号</th>
+					            <th class="th_style" >参会单位</th>
+					            <th class="th_style" >汇报议题</th>
+					            <th class="th_style" >汇报人姓名</th>
+					            <th class="th_style" >汇报人职务</th>
+					            <th class="th_style" >联系方式</th>
+					            <th class="th_style" >联络人</th>
+					            <th class="th_style" >联络人电话</th>
+					        </tr>
+					    </thead>
+						<tbody>
+							<tr class="issue_tr" th:each="issue : ${meetingissues}" th:sort="${issue.sort_index}">
+								<td class="index" th:text="${issue.sort_index}"></td>
+								<td th:text="${issue.report_unit}"></td>
+							　　 <td class="issue_id" th:id="${issue.id}" th:text="${issue.report_issue}"></td>
+							    <td th:text="${issue.report_person}"></td>
+							    <td th:text="${issue.report_post}"></td>
+							　　 <td th:text="${issue.report_tel_num}"></td>
+							    <td th:text="${issue.contact_member}"></td>
+								<td th:text="${issue.contact_phone}"></td>
+								<td class=""><input type="button" style="display:none" value="叫号" class="btn_class"></td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+		</table>
+		
+	</div>
+</body>
+<script th:src="@{/js/jquery-3.3.1.min.js}"></script>
+<script th:src="@{/js/jquery-ui.min.js}"></script>
+<script type="text/javascript">
+	$(function(){
+		reindex();
+		$(".btn_class").click(function(){
+			var trObj = $(this).parent().parent();
+			$.ajax({
+		        type: "POST",
+		        url: "/meeting/issueState/" + trObj.find("td.issue_id").attr("id"),
+		        success: function (message) {
+		        	if(message && message.result == true){
+						trObj.addClass("tr_hide");
+						reindex();
+		        	}
+		        },error: function (message) {
+		        }
+		    });
+		});
+	});
+	
+	//设置第一行显示叫号按钮
+	function reindex(){
+		var  sortIndex = 0;
+		$("#sort tr.issue_tr").each(function(i){
+			if(!$(this).hasClass("tr_hide")){
+				var inputObj = $(this).find("td > input");
+				if(sortIndex == 0){
+					inputObj.show();
+				}else{
+					inputObj.hide();
+				}
+				sortIndex++;
+				$(this).find("td.index").text(sortIndex);
+			}
+		});
+	}
+	
+	var fixHelperModified = function(e, tr) {
+		var $originals = tr.children();
+		var $helper = tr.clone();
+		$helper.children().each(function(index) {
+			$(this).width($originals.eq(index).width())
+		});
+		return $helper;
+	}, updateIndex = function(e, ui) {
+		var orderArray = new Array();
+		var sortIndex = 0;
+		$('td.index', ui.item.parent()).each(function(i) {
+			var inputObj = $(this).parent().find("input");
+			if(!$(this).parent().hasClass("tr_hide")){
+				if(sortIndex == 0){
+					inputObj.show();
+				}else{
+					inputObj.hide();
+				}
+				var index = sortIndex + 1;
+				var id = $(this).parent().find("td.issue_id").attr("id");
+				orderArray.push({id:id,index:index});
+				$(this).html(index);
+				sortIndex++;
+			}
+		});
+		
+		$.ajax({
+	        type: "POST",
+	        url: "/meeting/sortindex",
+	        contentType: "application/json; charset=utf-8",
+	        data: JSON.stringify(orderArray),
+	        dataType: "json",
+	        success: function (message) {
+	        },error: function (message) {
+	        }
+	    });
+	};
+
+	$("#sort tbody").sortable({
+		helper : fixHelperModified,
+		stop : updateIndex
+	}).disableSelection();
+</script>
+</html>

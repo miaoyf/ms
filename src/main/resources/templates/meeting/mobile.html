@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>议题排序</title>
+<style type="text/css">
+table {
+	width: 100%;
+}
+
+td table , ol li {
+	font-size: 3em;
+}
+
+td table {
+	font-size: 2.6em;
+}
+
+td {
+	border: 1px solid #0c0c0c;
+	text-align: center;
+	height: 26px;
+	width: 100px;
+}
+
+.tr_hide {
+	display: none;
+}
+
+#list1 li:nth-of-type(odd) {
+	background: #e2e2e2;
+} /*奇数行*/
+#list1 li:nth-of-type(even) {
+	background: #ffffff;
+} /*偶数行 */
+li {
+	text-align: left;
+	margin-left: 1em;
+	margin-right: 0.3em;
+	margin-bottom: 0.3em;
+}
+.font_bold{
+	font-weight: bold;
+	font-size: 3em;
+}
+.btn_class{
+	font-size : 0.6em; 
+	display: none;
+	float: right;
+	margin-right: 20px;
+	margin-top: 0.3em;
+}
+</style>
+</head>
+<body>
+	<div>
+		<input type="hidden" id="meetingId" th:value="${meetingId}">
+		<table>
+			<tr>
+				<td class="font_bold">会议议题单</td>
+			</tr>
+			<tr>
+				<td>
+					<table>
+						<tr>
+							<td>会议类型：</td>
+							<td th:text="${meeting.meeting_type}"></td>
+						</tr>
+						<tr>
+							<td>会议标题：</td>
+							<td colspan="3" th:text="${meeting.meeting_title}"></td>
+						</tr>
+						<tr>
+							<td>会议期次：</td>
+							<td th:text="${meeting.meeting_num}"></td>
+						</tr>
+						<tr>
+							<td>会议时间：</td>
+							<td th:text="${meeting.meeting_time}"></td>
+						</tr>
+						<tr>
+							<td>会议地点：</td>
+							<td th:text="${meeting.meeting_room}"></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+			</tr>
+			<tr>
+				<td>
+					<div class="font_bold">议题列表</div>
+					<div id="sort">
+						<ol id="list1">
+							<li th:each="issue:${meetingissues}">
+								<span style="display: none" th:text="${issue.sort_index}"></span> 
+								<span class="issue_id" th:id="${issue.id}" th:text="${issue.report_issue}"></span>
+								<span class=""> 
+									<input type="button" value="叫号" class="btn_class">
+								</span>
+							</li>
+						</ol>
+					</div>
+				</td>
+			</tr>
+		</table>
+
+	</div>
+</body>
+<script th:src="@{/js/jquery-3.3.1.min.js}"></script>
+<script th:src="@{/js/jquery-ui.min.js}"></script>
+<script th:src="@{/js/Sortable.js}"></script>
+<script type="text/javascript">
+	$(function(){
+		reindex(0);
+		//初始化ul
+		Sortable.create(list1, { 
+	  		onSort: function (evt) {
+	  			var item = evt.item;
+	  			var orderArray = new Array();
+	  			$(item).parent().parent().find("li").each(function(idx){
+	  				var inputObj = $(this).find("input");
+	  				if(idx == 0){
+	  					inputObj.show();
+	  				} else {
+	  					inputObj.hide();
+	  				}
+					var id = $(this).find("span.issue_id").attr("id");
+					orderArray.push({id:id,index:idx + 1});
+	  			});
+	  			//更新数据库里面的排序
+	  			$.ajax({
+	  		        type: "POST",
+	  		        url: "/meeting/sortindex",
+	  		        contentType: "application/json; charset=utf-8",
+	  		        data: JSON.stringify(orderArray),
+	  		        dataType: "json",
+	  		        success: function (message) {
+	  		        },error: function (message) {
+	  		        }
+	  		    });
+	  		}
+	  	});
+		
+		$(".btn_class").click(function(){
+			var liObj = $(this).parent().parent();
+			$.ajax({
+		        type: "POST",
+		        url: "/meeting/issueState/" + liObj.find("span.issue_id").attr("id"),
+		        success: function (message) {
+		        	if(message && message.result == true){
+		        		liObj.remove();
+						reindex(0);
+		        	}
+		        },error: function (message) {
+		        }
+		    });
+		});
+	});
+	
+	function reindex(index){
+		$("#list1").find("li").each(function(idx){
+			var inputObj = $(this).find("input");
+			if(idx == index){
+				inputObj.show();
+			} else {
+				inputObj.hide();
+			}
+ 		});
+	}
+</script>
+</html>

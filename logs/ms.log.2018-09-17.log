@@ -1,0 +1,34 @@
+2018-09-17 22:21:34 [main] WARN  o.s.b.t.j.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer - 
+
+Found multiple occurrences of org.json.JSONObject on the class path:
+
+	jar:file:/E:/dev/maven/repo/com/vaadin/external/google/android-json/0.0.20131108.vaadin1/android-json-0.0.20131108.vaadin1.jar!/org/json/JSONObject.class
+	jar:file:/E:/dev/maven/repo/org/json/json/20160810/json-20160810.jar!/org/json/JSONObject.class
+
+You may wish to exclude one of them to ensure predictable runtime behavior
+
+2018-09-17 22:21:34 [main] INFO  com.mq.screen.WebchatApplicationTests - Starting WebchatApplicationTests on MIAOYF with PID 12192 (started by miaoy in E:\dev\develop\workspace\meeting-screen)
+2018-09-17 22:21:34 [main] INFO  com.mq.screen.WebchatApplicationTests - No active profile set, falling back to default profiles: default
+2018-09-17 22:21:34 [main] INFO  o.s.w.context.support.GenericWebApplicationContext - Refreshing org.springframework.web.context.support.GenericWebApplicationContext@2c78324b: startup date [Mon Sep 17 22:21:34 CST 2018]; root of context hierarchy
+2018-09-17 22:21:38 [main] INFO  o.s.web.servlet.handler.SimpleUrlHandlerMapping - Mapped URL path [/**/favicon.ico] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+2018-09-17 22:21:38 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerAdapter - Looking for @ControllerAdvice: org.springframework.web.context.support.GenericWebApplicationContext@2c78324b: startup date [Mon Sep 17 22:21:34 CST 2018]; root of context hierarchy
+2018-09-17 22:21:38 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/meeting/beginMeeting/{id}]}" onto public java.lang.String com.mq.screen.controller.MeetingController.beginMeeting(java.lang.Long,org.springframework.ui.Model)
+2018-09-17 22:21:38 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/meeting/openMeeting/{id}]}" onto public java.lang.String com.mq.screen.controller.MeetingController.openMeeting(java.lang.Long,org.springframework.ui.Model)
+2018-09-17 22:21:38 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/meeting/finished]}" onto public java.lang.Object com.mq.screen.service.MeetingService.finished(java.lang.String)
+2018-09-17 22:21:38 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/meeting/meetingissue/{meetingId}],methods=[GET]}" onto public java.lang.Object com.mq.screen.service.MeetingService.meetingissue(java.lang.Long)
+2018-09-17 22:21:38 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/meeting/showScreen],methods=[GET]}" onto public java.lang.Object com.mq.screen.service.MeetingService.getQRCode()
+2018-09-17 22:21:38 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/meeting/meeting/{meetingId}],methods=[GET]}" onto public java.lang.Object com.mq.screen.service.MeetingService.meeting(java.lang.Long)
+2018-09-17 22:21:38 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/meeting/readScreen],methods=[GET]}" onto public java.lang.Object com.mq.screen.service.MeetingService.readScreen()
+2018-09-17 22:21:38 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/meeting/sortindex],methods=[POST],produces=[application/json;charset=UTF-8]}" onto public java.lang.Object com.mq.screen.service.MeetingService.sortindex(java.lang.String)
+2018-09-17 22:21:38 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/meeting/issueState/{id}],methods=[POST]}" onto public java.lang.Object com.mq.screen.service.MeetingService.issueState(java.lang.Long)
+2018-09-17 22:21:38 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/meeting/loadAudio],methods=[GET]}" onto public void com.mq.screen.service.MeetingService.loadAudio(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+2018-09-17 22:21:38 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/screen/queue],methods=[GET]}" onto public java.lang.Object com.mq.screen.service.ScreenService.getQRCode()
+2018-09-17 22:21:38 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/screen/readScreen],methods=[GET]}" onto public java.lang.Object com.mq.screen.service.ScreenService.readScreen()
+2018-09-17 22:21:38 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/screen/show]}" onto public java.lang.Object com.mq.screen.service.ScreenService.show(java.lang.String)
+2018-09-17 22:21:38 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/error]}" onto public org.springframework.http.ResponseEntity<java.util.Map<java.lang.String, java.lang.Object>> org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController.error(javax.servlet.http.HttpServletRequest)
+2018-09-17 22:21:38 [main] INFO  o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/error],produces=[text/html]}" onto public org.springframework.web.servlet.ModelAndView org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController.errorHtml(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+2018-09-17 22:21:38 [main] INFO  o.s.web.servlet.handler.SimpleUrlHandlerMapping - Mapped URL path [/webjars/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+2018-09-17 22:21:38 [main] INFO  o.s.web.servlet.handler.SimpleUrlHandlerMapping - Mapped URL path [/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+2018-09-17 22:21:38 [main] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
+2018-09-17 22:21:39 [main] INFO  com.mq.screen.WebchatApplicationTests - Started WebchatApplicationTests in 5.989 seconds (JVM running for 8.228)
+2018-09-17 22:21:39 [Thread-3] INFO  o.s.w.context.support.GenericWebApplicationContext - Closing org.springframework.web.context.support.GenericWebApplicationContext@2c78324b: startup date [Mon Sep 17 22:21:34 CST 2018]; root of context hierarchy

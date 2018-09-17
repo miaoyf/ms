@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title>首页</title>
+    <style type="text/css">
+    	body{background: #023E2C;margin:0;padding:0;height: 100%;}
+    	.ank_top{
+    		width: 94%;
+    		margin: 0 auto;
+    		padding: 20px 0;
+    		overflow: hidden;
+    	}
+    	.ank_top .ank_logo{
+			color:#fff;
+			font-size: 30px;
+    	}
+    	.ank_top .ank_title{color: #5CA03B; float: right;color: #fff;font-size: 30px;}
+    	.ank_top  span{display: inline-block;}
+    	.ank_top .ank_icon_logo{
+    		background: th:url("@{${/img/china.png}}") no-repeat;
+    		display: inline-block;;
+    		width: 37px;
+    		height: 41px;
+    		background-size: cover;
+    		float: left;
+    		margin: 2px 0 0;
+    	}
+    	.ank_top .ank_logo_p{float: right; color: #fff;}
+    	.ank_main{width: 96%;margin: 0px auto;}
+    	.ank_main_one{padding:15px 20px;background: #C3C3C3;border-radius: 10px;color: #fff;}
+    	.ank_main_one  .ank_main_onea{
+			font-size:30px;
+    	}
+    	.ank_main_one  .ank_main_onea{
+			font-size:25px;
+    	}
+    	.ank_main_two{padding:15px 20px;margin:10px 0 0;background: #63C32C;border-radius: 10px;color: #fff;}
+    	.ank_main_two  .ank_main_twoa{
+			font-size:45px;
+    	}
+    	.ank_main_two  .ank_main_twob{
+			font-size:35px;
+    	}
+    	.ank_main_thr{padding:15px 20px;margin:10px 0 0;background: #37C69A;border-radius: 10px;color: #fff;}
+    	.ank_main_thr  .ank_main_thra{
+			font-size:30px;
+    	}
+    	.ank_main_thr  .ank_main_thrb{
+			font-size:25px;
+    	}
+    </style>
+    <script src="./js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript">
+    	$(function(){
+    		//初始化页面不显示任何信息
+    		$("#preDiv").hide();
+    		$("#currentDiv").hide();
+    		$("#nextDiv").hide();
+    		
+    		//设置div的宽度
+    		var screenWidth = window.screen.width;
+    		$(".div_css").css("width",screenWidth);
+    		
+	    	setInterval("time()",1000);
+	    	
+	    	$("#showDiv").click(function(){
+	    		//toggleFullScreen();
+	    	});
+	    	
+	    	//每隔5秒执行一次请求
+	    	window.setInterval(showNewQueue,5000);
+	    	
+    	});
+    	
+    	function time(){
+    		var vWeek,vWeek_s,vDay;
+    		vWeek = ["星期天","星期一","星期二","星期三","星期四","星期五","星期六"];
+    		var date =  new Date();
+    		year = date.getFullYear();
+    		month = date.getMonth() + 1;
+    		day = date.getDate();
+    		hours = date.getHours();
+    		minutes = date.getMinutes();
+    		seconds = date.getSeconds();
+    		vWeek_s = date.getDay();
+    		$("#systime").text(year + "年" + month + "月" + day + "日" + "\t" + hours + ":" + minutes +":" + seconds + "\t" + vWeek[vWeek_s]);
+
+    	}
+    	
+    	function showNewQueue() {
+    		//第一步：ajax去后台取数据
+   			$.ajax({
+				type : 'GET',
+				url : "/meeting/showScreen?r=" + Math.random(),
+				success : function(data) {
+					if(data && data.result && data.data){
+						var jsonObj = JSON.parse(data.data);
+						var preObj = jsonObj.pre;
+						if(preObj){
+							$("#preDiv").show();
+							$("#preSubject").text(preObj.report_issue + "--" + preObj.report_person);
+							$("#pretTime").text(preObj.meeting_time);
+						} else {
+							$("#preDiv").hide();
+						}
+						var currentObj = jsonObj.current;
+						if(currentObj){
+							$("#currentDiv").show();
+							$("#currentSubject").text(currentObj.report_issue + "--" + currentObj.report_person);
+							$("#spanTime").text(currentObj.meeting_time);
+							$("#spanRoom").text(currentObj.meeting_room);
+							
+							var nextObj = jsonObj.next;
+							if(nextObj){
+								$("#nextDiv").show();
+								$("#nextSubject").text(nextObj.report_issue + "--" + nextObj.report_person);
+								$("#nextTime").text(nextObj.meeting_time);
+							} else {
+								$("#nextDiv").hide();
+							}
+						} else {
+							$("#currentDiv").hide();
+						}
+						
+						//发读屏幕请求
+						readScreen();
+					}
+				}
+			});
+    	}
+    	
+    	function readScreen(){
+    		//播放两遍
+		    $("#playAudo").attr("src","/meeting/loadAudio?i=" + Math.random());
+	        playAudio($("#playAudo")[0],2);
+    	}
+    	
+    	function playAudio(vid,times){
+     		var start = 0;//定义循环的变量
+        	vid.addEventListener("ended",function() {
+        		vid.play();//启动音频，也就是播放
+        		vid.autoplay = false;
+        		start++;//循环
+        		start == times && vid.pause();//也就是当循环的变量等于次数的时候，就会终止循环并且关掉音频
+        	});
+        	vid.play();//启动音频，用于第一次启动
+    	}
+    	
+    	//参数n为休眠时间，单位为毫秒:
+        function sleep(n) {
+            var start = new Date().getTime();
+            while (true) {
+                if (new Date().getTime() - start > n) {
+                    break;
+                }
+            }
+        }
+
+    	
+    	function toggleFullScreen() {
+			if (!document.fullscreenElement && // alternative standard method
+				!document.mozFullScreenElement && !document.webkitFullscreenElement) {// current working methods
+				if (document.documentElement.requestFullscreen) {
+					document.documentElement.requestFullscreen();
+				} else if (document.documentElement.mozRequestFullScreen) {
+					document.documentElement.mozRequestFullScreen();
+				} else if (document.documentElement.webkitRequestFullscreen) {
+					document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+				}
+			} else {
+				if (document.cancelFullScreen) {
+					document.cancelFullScreen();
+				} else if (document.mozCancelFullScreen) {
+					document.mozCancelFullScreen();
+				} else if (document.webkitCancelFullScreen) {
+					document.webkitCancelFullScreen();
+				}
+			}
+		}
+    	
+    	/**************************************时间格式化处理************************************/
+    	function dateFtt(fmt,date) { //author: meizz   
+    	  var o = {   
+    	    "M+" : date.getMonth()+1,                 //月份   
+    	    "d+" : date.getDate(),                    //日   
+    	    "h+" : date.getHours(),                   //小时   
+    	    "m+" : date.getMinutes(),                 //分   
+    	    "s+" : date.getSeconds(),                 //秒   
+    	    "q+" : Math.floor((date.getMonth()+3)/3), //季度   
+    	    "S"  : date.getMilliseconds()             //毫秒   
+    	  };   
+    	  if(/(y+)/.test(fmt))   
+    	    fmt=fmt.replace(RegExp.$1, (date.getFullYear()+"").substr(4 - RegExp.$1.length));   
+    	  for(var k in o)   
+    	    if(new RegExp("("+ k +")").test(fmt))   
+    	  fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));   
+    	  return fmt;   
+    	}
+    </script>
+</head>
+<body>
+	<div id="showDiv">
+		<div class="ank_top">
+			<span class="ank_logo">
+				<img  style="width: 35px; height: 34px;margin-bottom: -7px;" th:src="@{'/img/china.png'}"/>
+				安康市政府会议
+			</span>
+			<span id="systime" class="ank_title">叫号系统</span>
+			<p class="ank_logo_p"></p>
+		</div>
+		<div class="ank_main">
+			<div id="preDiv" class="ank_main_one">
+				<div id="preSubject" class="ank_main_onea">发展高峰论坛数字中国发展高峰论坛数字中国发展</div>
+				<div id="pretTime" class="ank_main_oneb">09:00-11:00</div>
+			</div>
+			<div id="currentDiv" class="ank_main_two">
+				<div id="currentSubject" class="ank_main_twoa" >
+					发展高峰论坛数字中国发展高峰论坛数字中国发展</div>
+				<div id="currentTime"  class="ank_main_twob">
+					<span id="spanTime">9:00-11:00</span>
+					<span id="spanRoom">第二会议室</span>
+				</div>
+			</div>
+			<div id="nextDiv" class="ank_main_thr">
+				<div id="nextSubject"  class="ank_main_thra">
+					发展高峰论坛数字中国发展高峰论坛数字中国发展
+				</div>
+				<div id="nextTime"  class="ank_main_thrb">9:00-11:00</div>
+			</div>
+		</div>
+	</div>
+	<div style="display: hidden;">
+		<audio id="playAudo" src="">
+			您的浏览器不支持音频播放！！
+		</audio>
+	</div>
+</body>
+</html>
